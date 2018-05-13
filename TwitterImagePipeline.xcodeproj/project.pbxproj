@@ -6,6 +6,21 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		83D5005D20A8D69000916653 /* TwitterImagePipeline-Universal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 83D5005E20A8D69000916653 /* Build configuration list for PBXAggregateTarget "TwitterImagePipeline-Universal" */;
+			buildPhases = (
+				83D5006120A8D6D400916653 /* ShellScript */,
+			);
+			dependencies = (
+				83D5006320A8D82800916653 /* PBXTargetDependency */,
+			);
+			name = "TwitterImagePipeline-Universal";
+			productName = "TwitterImagePipeline-Universal";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		3D1659C3207300C200AA140A /* NSData+TIPAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC217521DDF69DB0017B0DA /* NSData+TIPAdditions.m */; };
 		3D1659C4207300C200AA140A /* NSDictionary+TIPAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC217541DDF69DB0017B0DA /* NSDictionary+TIPAdditions.m */; };
@@ -266,6 +281,13 @@
 			remoteGlobalIDString = 8BFF17691DF5B4AD005DE734;
 			remoteInfo = TwitterImagePipeline.framework;
 		};
+		83D5006220A8D82800916653 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8BFBD33F1AA77DB2007A08DD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8BFF17691DF5B4AD005DE734;
+			remoteInfo = TwitterImagePipeline.framework;
+		};
 		8B6301991E69223800C9A86A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8BFBD33F1AA77DB2007A08DD /* Project object */;
@@ -315,6 +337,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		83D5005C20A8D65300916653 /* create-fat-framework.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "create-fat-framework.sh"; sourceTree = "<group>"; };
 		8B00D5B71CFFDF0800D1728D /* TIPProblematicImagesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TIPProblematicImagesTest.m; sourceTree = "<group>"; };
 		8B0243701E5BF8380058D10A /* InspectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InspectorViewController.h; sourceTree = "<group>"; };
 		8B0243711E5BF8380058D10A /* InspectorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InspectorViewController.m; sourceTree = "<group>"; };
@@ -743,6 +766,7 @@
 		8BFBD33E1AA77DB2007A08DD = {
 			isa = PBXGroup;
 			children = (
+				83D5005C20A8D65300916653 /* create-fat-framework.sh */,
 				8B7D4D4A1FC0FAE000509463 /* Extended */,
 				8B9333A11AAA1DAB00D2C5C7 /* Frameworks */,
 				8BE31C841B9A1BF5009BC0B2 /* ImageSpeedComparisonExample */,
@@ -1115,6 +1139,11 @@
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = Twitter;
 				TargetAttributes = {
+					83D5005D20A8D69000916653 = {
+						CreatedOnToolsVersion = 9.3;
+						DevelopmentTeam = JVL9YPNS8B;
+						ProvisioningStyle = Automatic;
+					};
 					8B63017F1E68F9B400C9A86A = {
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
@@ -1162,6 +1191,7 @@
 				8BE31C821B9A1BF5009BC0B2 /* ImageSpeedComparison */,
 				8BB66A0F1E450DFB00A8F241 /* TIP Sample App */,
 				8B63017F1E68F9B400C9A86A /* TIP Swift Sample App */,
+				83D5005D20A8D69000916653 /* TwitterImagePipeline-Universal */,
 			);
 		};
 /* End PBXProject section */
@@ -1232,6 +1262,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		83D5006120A8D6D400916653 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/bash\n\n# Adapted from http://stackoverflow.com/questions/24039470/xcode-6-ios-creating-a-cocoa-touch-framework-architectures-issues/26691080#26691080\n# and https://gist.github.com/cromandini/1a9c4aeab27ca84f5d79\n\n# Create a new aggregate target.\n# For the automatically generated scheme, change its build config to \"release\".\n# Ensure this target's \"product name\" build setting matches the framework's.\n# Add a run script with `source \"${PROJECT_DIR}/path_to_this_script`\n\nUNIVERSAL_OUTPUT_DIR=${BUILD_DIR}/${CONFIGURATION}-universal\nRELEASE_DIR=${PROJECT_DIR}/build\n\n# make sure the output directory exists\nmkdir -p \"${UNIVERSAL_OUTPUT_DIR}\"\n\n# Step 1. Build Device and Simulator versions\nxcodebuild -target \"${PROJECT_NAME}.framework\" ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build -sdk iphoneos\nxcodebuild -target \"${PROJECT_NAME}.framework\" ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build -sdk iphonesimulator\n\n# Step 2. Copy the framework structure (from iphoneos build) to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PRODUCT_NAME}.framework\" \"${UNIVERSAL_OUTPUT_DIR}/\"\n\n# Step 3. Copy Swift modules from iphonesimulator build (if it exists) to the copied framework directory\nSIMULATOR_SWIFT_MODULES_DIR=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule/.\"\nif [ -d \"${SIMULATOR_SWIFT_MODULES_DIR}\" ]; then\ncp -R \"${SIMULATOR_SWIFT_MODULES_DIR}\" \"${UNIVERSAL_OUTPUT_DIR}/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule\"\nfi\n\n# Step 4. Create universal binary file using lipo and place the combined executable in the copied framework directory\nlipo -create -output \"${UNIVERSAL_OUTPUT_DIR}/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\"\n\n# Step 5. Convenience step to copy the framework to the project's directory\ncp -R \"${UNIVERSAL_OUTPUT_DIR}/${PRODUCT_NAME}.framework\" \"${RELEASE_DIR}\"\n\n# Step 6. Convenience step to open the project's directory in Finder\nopen \"${RELEASE_DIR}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8B63017C1E68F9B400C9A86A /* Sources */ = {
@@ -1409,6 +1455,11 @@
 			target = 8BFF17691DF5B4AD005DE734 /* TwitterImagePipeline.framework */;
 			targetProxy = 3D1659EB2073047000AA140A /* PBXContainerItemProxy */;
 		};
+		83D5006320A8D82800916653 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8BFF17691DF5B4AD005DE734 /* TwitterImagePipeline.framework */;
+			targetProxy = 83D5006220A8D82800916653 /* PBXContainerItemProxy */;
+		};
 		8B63019A1E69223800C9A86A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 8BFF17691DF5B4AD005DE734 /* TwitterImagePipeline.framework */;
@@ -1462,6 +1513,24 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		83D5005F20A8D69000916653 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JVL9YPNS8B;
+				PRODUCT_NAME = TwitterImagePipeline;
+			};
+			name = Debug;
+		};
+		83D5006020A8D69000916653 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JVL9YPNS8B;
+				PRODUCT_NAME = TwitterImagePipeline;
+			};
+			name = Release;
+		};
 		8B6301911E68F9B400C9A86A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1908,6 +1977,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		83D5005E20A8D69000916653 /* Build configuration list for PBXAggregateTarget "TwitterImagePipeline-Universal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83D5005F20A8D69000916653 /* Debug */,
+				83D5006020A8D69000916653 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		8B6301931E68F9B400C9A86A /* Build configuration list for PBXNativeTarget "TIP Swift Sample App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
